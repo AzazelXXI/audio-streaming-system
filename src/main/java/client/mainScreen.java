@@ -28,27 +28,129 @@ public class mainScreen extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        mainContainer = new java.awt.Panel();
+        btnStart = new javax.swing.JButton();
+        btnStop = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        btnPrevious = new javax.swing.JButton();
+        listSongs = new java.awt.List();
+        lblStartTimer = new javax.swing.JLabel();
+        lblEndTimer = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
+        btnPause = new javax.swing.JButton();
+        btnGoBackBySecond = new javax.swing.JButton();
+        btnSkipBySecond = new javax.swing.JButton();
+        btnUpload = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("RetroAudio");
+        setPreferredSize(new java.awt.Dimension(600, 420));
 
-        jLabel1.setText("Hello");
+        btnStart.setText("Start");
+
+        btnStop.setText("Stop");
+
+        btnNext.setText("Next");
+
+        btnPrevious.setText("Previous");
+
+        lblStartTimer.setText("00:00");
+
+        lblEndTimer.setText("00:00");
+
+        btnPause.setText("||");
+
+        btnGoBackBySecond.setText("<<");
+
+        btnSkipBySecond.setText(">>");
+
+        btnUpload.setText("Upload");
+
+        javax.swing.GroupLayout mainContainerLayout = new javax.swing.GroupLayout(mainContainer);
+        mainContainer.setLayout(mainContainerLayout);
+        mainContainerLayout.setHorizontalGroup(
+            mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainContainerLayout.createSequentialGroup()
+                        .addComponent(listSongs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(mainContainerLayout.createSequentialGroup()
+                        .addComponent(btnStart)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnStop)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnNext)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPrevious)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnUpload)
+                        .addGap(22, 22, 22))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainContainerLayout.createSequentialGroup()
+                        .addGap(0, 33, Short.MAX_VALUE)
+                        .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(mainContainerLayout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(lblStartTimer)
+                                .addGap(379, 379, 379)
+                                .addComponent(lblEndTimer)
+                                .addGap(26, 26, 26))
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41))))
+            .addGroup(mainContainerLayout.createSequentialGroup()
+                .addGap(163, 163, 163)
+                .addComponent(btnGoBackBySecond)
+                .addGap(18, 18, 18)
+                .addComponent(btnPause)
+                .addGap(18, 18, 18)
+                .addComponent(btnSkipBySecond)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        mainContainerLayout.setVerticalGroup(
+            mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainContainerLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEndTimer)
+                    .addComponent(lblStartTimer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPause)
+                    .addComponent(btnGoBackBySecond)
+                    .addComponent(btnSkipBySecond))
+                .addGap(22, 22, 22)
+                .addComponent(listSongs, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnStart)
+                    .addComponent(btnStop)
+                    .addComponent(btnNext)
+                    .addComponent(btnPrevious)
+                    .addComponent(btnUpload))
+                .addContainerGap())
+        );
+
+        btnStart.getAccessibleContext().setAccessibleName("");
+        btnStart.getAccessibleContext().setAccessibleDescription("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(178, 178, 178)
-                .addComponent(jLabel1)
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(138, 138, 138)
-                .addComponent(jLabel1)
-                .addContainerGap(145, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -80,6 +182,18 @@ public class mainScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnGoBackBySecond;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPause;
+    private javax.swing.JButton btnPrevious;
+    private javax.swing.JButton btnSkipBySecond;
+    private javax.swing.JButton btnStart;
+    private javax.swing.JButton btnStop;
+    private javax.swing.JButton btnUpload;
+    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JLabel lblEndTimer;
+    private javax.swing.JLabel lblStartTimer;
+    private java.awt.List listSongs;
+    private java.awt.Panel mainContainer;
     // End of variables declaration//GEN-END:variables
 }

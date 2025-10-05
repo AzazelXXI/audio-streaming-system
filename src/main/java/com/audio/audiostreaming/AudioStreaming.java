@@ -11,7 +11,6 @@ package com.audio.audiostreaming;
 public class AudioStreaming {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
         new client.mainScreen().setVisible(true);
     }
 }
