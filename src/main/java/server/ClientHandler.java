@@ -1,6 +1,7 @@
 package server;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.Socket;
@@ -13,31 +14,42 @@ public class ClientHandler implements Runnable {
     }
 
     public void run() {
-        try (DataInputStream in = new DataInputStream(socket.getInputStream())) {
+        try (DataInputStream in = new DataInputStream(socket.getInputStream());
+                DataOutputStream out = new DataOutputStream(socket.getOutputStream());) {
             File dir = new File("server_storage");
 
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            
-            String upload = in.readUTF();
-            
-            if ("UPLOAD".equals(upload)) {
+
+            String command = in.readUTF();
+
+            if ("UPLOAD".equals(command)) {
                 String fileName = in.readUTF();
                 long fileSize = in.readLong();
 
-                try (FileOutputStream out = new FileOutputStream("server_storage/" + fileName);) {
+                try (FileOutputStream fileOut = new FileOutputStream("server_storage/" + fileName);) {
                     byte[] buffer = new byte[4096];
                     long remaining = fileSize;
                     int read;
 
-                    while (remaining > 0 && (read = in.read(buffer, 0 , (int)Math.min(buffer.length, remaining))) > 0) {
-                        out.write(buffer, 0, read);
+                    while (remaining > 0 && (read = in.read(buffer, 0, (int) Math.min(buffer.length, remaining))) > 0) {
+                        fileOut.write(buffer, 0, read);
                         remaining -= read;
                     }
 
-                    out.flush();
+                    fileOut.flush();
+                    // System.out.println("");
                 }
+            } else if ("LIST".equals(command)) {
+                String[] files = dir.list();
+                if (files == null)
+                    files = new String[0];
+                out.writeInt(files.length);
+                for (String file : files) {
+                    out.writeUTF(file);
+                }
+                
             }
         } catch (Exception e) {
             System.out.println("Client error: " + e);

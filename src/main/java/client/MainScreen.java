@@ -4,13 +4,17 @@
  */
 package client;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.Socket;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,6 +32,7 @@ public class MainScreen extends javax.swing.JFrame {
     public MainScreen() {
         initComponents();
         setLocationRelativeTo(null);
+        loadSong();
     }
 
     /**
@@ -38,7 +43,7 @@ public class MainScreen extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         mainContainer = new java.awt.Panel();
@@ -46,7 +51,6 @@ public class MainScreen extends javax.swing.JFrame {
         btnStop = new javax.swing.JButton();
         btnNext = new javax.swing.JButton();
         btnPrevious = new javax.swing.JButton();
-        listSongs = new java.awt.List();
         lblStartTimer = new javax.swing.JLabel();
         lblEndTimer = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
@@ -54,6 +58,8 @@ public class MainScreen extends javax.swing.JFrame {
         btnGoBackBySecond = new javax.swing.JButton();
         btnSkipBySecond = new javax.swing.JButton();
         btnUpload = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listSongs = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("RetroAudio");
@@ -83,83 +89,74 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.setViewportView(listSongs);
+
         javax.swing.GroupLayout mainContainerLayout = new javax.swing.GroupLayout(mainContainer);
         mainContainer.setLayout(mainContainerLayout);
         mainContainerLayout.setHorizontalGroup(
-                mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(mainContainerLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                                .addComponent(listSongs, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addContainerGap())
-                                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                                .addComponent(btnStart)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnStop)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnNext)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnPrevious)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnUpload)
-                                                .addGap(22, 22, 22))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainContainerLayout
-                                                .createSequentialGroup()
-                                                .addGap(0, 33, Short.MAX_VALUE)
-                                                .addGroup(mainContainerLayout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                                                .addGap(19, 19, 19)
-                                                                .addComponent(lblStartTimer)
-                                                                .addGap(379, 379, 379)
-                                                                .addComponent(lblEndTimer))
-                                                        .addComponent(jProgressBar1,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 496,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(41, 41, 41))))
-                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                .addGap(163, 163, 163)
-                                .addComponent(btnGoBackBySecond)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnPause)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnSkipBySecond)
-                                .addGap(0, 0, Short.MAX_VALUE)));
+            mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainContainerLayout.createSequentialGroup()
+                        .addComponent(btnStart)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnStop)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnNext)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPrevious)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnUpload)
+                        .addGap(22, 22, 22))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainContainerLayout.createSequentialGroup()
+                        .addGap(0, 37, Short.MAX_VALUE)
+                        .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(mainContainerLayout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(lblStartTimer)
+                                .addGap(379, 379, 379)
+                                .addComponent(lblEndTimer))
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41))))
+            .addGroup(mainContainerLayout.createSequentialGroup()
+                .addGap(163, 163, 163)
+                .addComponent(btnGoBackBySecond)
+                .addGap(18, 18, 18)
+                .addComponent(btnPause)
+                .addGap(18, 18, 18)
+                .addComponent(btnSkipBySecond)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(mainContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
         mainContainerLayout.setVerticalGroup(
-                mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-                                mainContainerLayout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 24,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(mainContainerLayout
-                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(lblEndTimer)
-                                                .addComponent(lblStartTimer))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(mainContainerLayout
-                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(btnPause)
-                                                .addComponent(btnGoBackBySecond)
-                                                .addComponent(btnSkipBySecond))
-                                        .addGap(22, 22, 22)
-                                        .addComponent(listSongs, javax.swing.GroupLayout.PREFERRED_SIZE, 219,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42,
-                                                Short.MAX_VALUE)
-                                        .addGroup(mainContainerLayout
-                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(btnStart)
-                                                .addComponent(btnStop)
-                                                .addComponent(btnNext)
-                                                .addComponent(btnPrevious)
-                                                .addComponent(btnUpload))
-                                        .addContainerGap()));
+            mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainContainerLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEndTimer)
+                    .addComponent(lblStartTimer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPause)
+                    .addComponent(btnGoBackBySecond)
+                    .addComponent(btnSkipBySecond))
+                .addGap(11, 11, 11)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnStart)
+                    .addComponent(btnStop)
+                    .addComponent(btnNext)
+                    .addComponent(btnPrevious)
+                    .addComponent(btnUpload))
+                .addContainerGap())
+        );
 
         btnStart.getAccessibleContext().setAccessibleName("");
         btnStart.getAccessibleContext().setAccessibleDescription("");
@@ -167,19 +164,19 @@ public class MainScreen extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -217,19 +214,33 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }// GEN-LAST:event_btnUploadMouseClicked
 
+
+    private void loadSong() {
+        try (Socket socket = new Socket("localhost", 5000);
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        DataInputStream in = new DataInputStream(socket.getInputStream())) {
+            // Send the command
+            out.writeUTF("LIST");
+            // Read number of songs 
+            int songCount = in.readInt();
+
+            // Prepare list song model
+            DefaultListModel<String> model = new DefaultListModel<>();
+            for (int i = 0; i < songCount; i++) {
+                String songName = in.readUTF();
+                model.addElement(songName);
+            }
+
+            listSongs.setModel(model);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-        // (optional) ">
-        /*
-         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-         * look and feel.
-         * For details see
-         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -256,9 +267,10 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnStop;
     private javax.swing.JButton btnUpload;
     private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblEndTimer;
     private javax.swing.JLabel lblStartTimer;
-    private java.awt.List listSongs;
+    private javax.swing.JList<String> listSongs;
     private java.awt.Panel mainContainer;
     // End of variables declaration//GEN-END:variables
 }
