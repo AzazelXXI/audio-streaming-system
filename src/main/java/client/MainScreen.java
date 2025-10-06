@@ -242,9 +242,21 @@ public class MainScreen extends javax.swing.JFrame {
             String ext = selectedSong.substring(selectedSong.lastIndexOf('.') + 1).toLowerCase();
 
             if (ext.equals("mp3")) {
-                playAudioMp3(audioData);
+                new Thread(() -> {
+                    try {
+                        playAudioMp3(audioData);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             } else {
-                playAudio(audioData);
+                new Thread(() -> {
+                    try {
+                        playAudio(audioData);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -298,7 +310,7 @@ public class MainScreen extends javax.swing.JFrame {
             DefaultListModel<String> model = new DefaultListModel<>();
             for (int i = 0; i < songCount; i++) {
                 String songName = in.readUTF();
-                int dotIndex = songName.lastIndexOf('.');
+                // int dotIndex = songName.lastIndexOf('.');
                 // String displayName = (dotIndex > 0) ? songName.substring(0, dotIndex) : songName;
                 model.addElement(songName);
             }
