@@ -3,6 +3,7 @@ package server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.Socket;
 
@@ -49,7 +50,25 @@ public class ClientHandler implements Runnable {
                 for (String file : files) {
                     out.writeUTF(file);
                 }
-                
+            }
+            String songName = in.readUTF();
+            if ("STREAM".equals(command)) {
+                File songFile = new File("server_storage/" + songName);
+
+                if (songFile.exists()) {
+                    out.writeLong(songFile.length());
+
+                    try (FileInputStream fis = new FileInputStream(songFile)) {
+                        byte[] buffer = new byte[4096];
+                        int read;
+
+                        while ((read = fis.read(buffer)) > 0) {
+                            out.write(buffer, 0, read);
+                        }
+                    }
+                } else {
+                    out.writeLong(0); // File not found
+                }
             }
         } catch (Exception e) {
             System.out.println("Client error: " + e);

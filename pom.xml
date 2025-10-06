@@ -10,4 +10,13 @@
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>com.audio.audiostreaming.AudioStreaming</exec.mainClass>
     </properties>
+    
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/javazoom/jlayer -->
+        <dependency>
+            <groupId>javazoom</groupId>
+            <artifactId>jlayer</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+    </dependencies>
 </project>

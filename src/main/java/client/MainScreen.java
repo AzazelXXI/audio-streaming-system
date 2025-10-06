@@ -4,18 +4,22 @@
  */
 package client;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
-
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
+
+import javazoom.jl.player.Player;
 
 /**
  *
@@ -43,6 +47,7 @@ public class MainScreen extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -60,11 +65,17 @@ public class MainScreen extends javax.swing.JFrame {
         btnUpload = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         listSongs = new javax.swing.JList<>();
+        sliderVolume = new javax.swing.JSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("RetroAudio");
 
         btnStart.setText("Start");
+        btnStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartActionPerformed(evt);
+            }
+        });
 
         btnStop.setText("Stop");
 
@@ -118,19 +129,19 @@ public class MainScreen extends javax.swing.JFrame {
                                 .addGap(379, 379, 379)
                                 .addComponent(lblEndTimer))
                             .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41))))
-            .addGroup(mainContainerLayout.createSequentialGroup()
-                .addGap(163, 163, 163)
-                .addComponent(btnGoBackBySecond)
-                .addGap(18, 18, 18)
-                .addComponent(btnPause)
-                .addGap(18, 18, 18)
-                .addComponent(btnSkipBySecond)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(mainContainerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                        .addGap(41, 41, 41))
+                    .addGroup(mainContainerLayout.createSequentialGroup()
+                        .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(mainContainerLayout.createSequentialGroup()
+                                .addComponent(btnGoBackBySecond)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnPause)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSkipBySecond)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(sliderVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())))
         );
         mainContainerLayout.setVerticalGroup(
             mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,14 +152,15 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEndTimer)
                     .addComponent(lblStartTimer))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPause)
                     .addComponent(btnGoBackBySecond)
-                    .addComponent(btnSkipBySecond))
-                .addGap(11, 11, 11)
+                    .addComponent(btnSkipBySecond)
+                    .addComponent(sliderVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addGap(11, 11, 11)
                 .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnStart)
                     .addComponent(btnStop)
@@ -180,6 +192,65 @@ public class MainScreen extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void playAudioMp3(byte[] audioData) throws Exception {
+        ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
+        Player player = new Player(bais);
+        player.play();
+    }
+
+    private void playAudio(byte[] audioData) throws Exception {
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(audioData)) {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(bais);
+
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.start();
+        }
+    }
+
+    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnStartActionPerformed
+        // TODO add your handling code here:
+        String selectedSong = listSongs.getSelectedValue();
+
+        if (selectedSong == null) {
+            return;
+        }
+
+        try (Socket socket = new Socket("localhost", 5000);
+                DataInputStream in = new DataInputStream(socket.getInputStream());
+                DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
+            // send request for streaming
+            out.writeUTF("STREAM");
+            out.writeUTF(selectedSong);
+
+            // receive file size
+            long fileSize = in.readLong();
+
+            // receive file data
+            byte[] buffer = new byte[4096];
+            long remmaining = fileSize;
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            int read;
+            while (remmaining > 0 && (read = in.read(buffer, 0, (int) Math.min(buffer.length, remmaining))) > 0) {
+                byteArrayOutputStream.write(buffer, 0, read);
+                remmaining -= read;
+            }
+
+            // Play audio
+            byte[] audioData = byteArrayOutputStream.toByteArray();
+            String ext = selectedSong.substring(selectedSong.lastIndexOf('.') + 1).toLowerCase();
+
+            if (ext.equals("mp3")) {
+                playAudioMp3(audioData);
+            } else {
+                playAudio(audioData);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }// GEN-LAST:event_btnStartActionPerformed
 
     private void btnUploadMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_btnUploadMouseClicked
         javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
@@ -214,20 +285,21 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }// GEN-LAST:event_btnUploadMouseClicked
 
-
     private void loadSong() {
         try (Socket socket = new Socket("localhost", 5000);
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-        DataInputStream in = new DataInputStream(socket.getInputStream())) {
+                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+                DataInputStream in = new DataInputStream(socket.getInputStream())) {
             // Send the command
             out.writeUTF("LIST");
-            // Read number of songs 
+            // Read number of songs
             int songCount = in.readInt();
 
             // Prepare list song model
             DefaultListModel<String> model = new DefaultListModel<>();
             for (int i = 0; i < songCount; i++) {
                 String songName = in.readUTF();
+                int dotIndex = songName.lastIndexOf('.');
+                // String displayName = (dotIndex > 0) ? songName.substring(0, dotIndex) : songName;
                 model.addElement(songName);
             }
 
@@ -272,5 +344,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel lblStartTimer;
     private javax.swing.JList<String> listSongs;
     private java.awt.Panel mainContainer;
+    private javax.swing.JSlider sliderVolume;
     // End of variables declaration//GEN-END:variables
 }
