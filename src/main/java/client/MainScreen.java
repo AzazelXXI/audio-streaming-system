@@ -30,6 +30,9 @@ public class MainScreen extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger
             .getLogger(MainScreen.class.getName());
 
+    private Thread playThread;
+    private Clip currentClip; // for WAV and other format
+    private volatile boolean StopRequested;
     /**
      * Creates new form mainScreen
      */
@@ -203,9 +206,9 @@ public class MainScreen extends javax.swing.JFrame {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(audioData)) {
             AudioInputStream ais = AudioSystem.getAudioInputStream(bais);
 
-            Clip clip = AudioSystem.getClip();
-            clip.open(ais);
-            clip.start();
+            currentClip = AudioSystem.getClip();
+            currentClip.open(ais);
+            currentClip.start();
         }
     }
 
@@ -215,6 +218,20 @@ public class MainScreen extends javax.swing.JFrame {
 
         if (selectedSong == null) {
             return;
+        }
+
+        // Stop for mp3 format
+        if (playThread != null && playThread.isAlive()) {
+            playThread.interrupt();
+            playThread = null;
+        }
+
+        // Stop for other format
+        if (currentClip != null && currentClip.isRunning()) {
+            currentClip.stop();
+            currentClip.close();
+
+            currentClip = null;
         }
 
         try (Socket socket = new Socket("localhost", 5000);
@@ -242,21 +259,23 @@ public class MainScreen extends javax.swing.JFrame {
             String ext = selectedSong.substring(selectedSong.lastIndexOf('.') + 1).toLowerCase();
 
             if (ext.equals("mp3")) {
-                new Thread(() -> {
+                playThread = new Thread(() -> {
                     try {
                         playAudioMp3(audioData);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }).start();
+                });
+                playThread.start();
             } else {
-                new Thread(() -> {
+                playThread = new Thread(() -> {
                     try {
                         playAudio(audioData);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }).start();
+                });
+                playThread.start();
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
