@@ -1,15 +1,14 @@
 Workflow of audio streaming system:
 
 1. Create GUI:
-    ☐ JPanel: Container for all components
-    ☐ Progressbar: Song progress timeline
-    ☐ Label: Start timer, end timer, song name
-    ☐ List: list of songs
-    ☐ Button: Start, Stop, Next, Previous, Forward, Backward, Upload
-    ☐ Slider: Audio Volumne
-
+    ✔ JPanel: Container for all components @done(25-10-08 19:57)
+    ✔ Progressbar: Song progress timeline @done(25-10-08 19:57)
+    ✔ Label: Start timer, end timer, song name @done(25-10-08 19:57)
+    ✔ List: list of songs @done(25-10-08 19:57)
+    ✔ Button: Start, Stop, Next, Previous, Forward, Backward, Upload @done(25-10-08 19:57)
+    ✔ Slider: Audio Volumne @done(25-10-08 19:57)
 2. logic:
-    ☐ Set app position at the center of screen
+    ✔ Set app position at the center of screen @done(25-10-08 19:57)
     ☐ Making upload logic (upload by using client)
     ☐ Ensure the list is updating real-time
     ☐ User can click video on the list and play
@@ -23,6 +22,4 @@ Workflow of audio streaming system:
 3. Extra:
     Login Screen:
         ☐ Username and Password
-        ☐ User Profile for User own list 
-
-
+        ☐ User Profile for User own list
