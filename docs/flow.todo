@@ -9,7 +9,7 @@ Workflow of audio streaming system:
     ✔ Slider: Audio Volumne @done(25-10-08 19:57)
 2. logic:
     ✔ Set app position at the center of screen @done(25-10-08 19:57)
-    ☐ Making upload logic (upload by using client)
+    ✔ Making upload logic (upload by using client) @done(25-10-09 12:50)
     ☐ Ensure the list is updating real-time
     ☐ User can click video on the list and play
     ☐ When user click stop will cancel the song even not like pause
