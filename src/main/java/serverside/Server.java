@@ -14,15 +14,15 @@ public class Server {
             System.out.println("Server is starting on port " + serverPort);
             while (true) {
                 // try {
-                    Socket mySocket = myServerSocket.accept(); // Installed the connection from the client
+                Socket mySocket = myServerSocket.accept(); // Installed the connection from the client
 
-                    new ClientHandler(mySocket).start();
+                new ClientHandler(mySocket).start();
                 // } catch (Exception e) {
-                //     // TODO: handle exception
-                //     e.printStackTrace();
+                // // TODO: handle exception
+                // e.printStackTrace();
                 // }
             }
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }

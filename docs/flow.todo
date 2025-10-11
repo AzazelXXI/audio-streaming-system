@@ -10,8 +10,8 @@ Workflow of audio streaming system:
 2. logic:
     ✔ Set app position at the center of screen @done(25-10-08 19:57)
     ✔ Making upload logic (upload by using client) @done(25-10-09 12:50)
-    ☐ Ensure the list is updating real-time
-    ☐ User can click video on the list and play
+    ✔ Ensure the list is updating real-time @done(25-10-11 14:24)
+    ☐ User can click on the list and play
     ☐ When user click stop will cancel the song even not like pause
     ☐ When user click Next will move to next song in the song list (if there is no song make a pop up for it)
     ☐ When user click Previous will move to the previous song in the list (if there is no song make a pop up for it)

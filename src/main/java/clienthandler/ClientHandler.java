@@ -26,7 +26,9 @@ public class ClientHandler extends Thread {
                 String dirPath = "server_storage";
 
                 // Check folder if it existing
-                isDirExist(dirPath);
+                if (!isDirExist(dirPath)) {
+                    return;
+                }
 
                 try (FileOutputStream fos = new FileOutputStream(dirPath + "/" + fileName)) {
 
@@ -48,6 +50,27 @@ public class ClientHandler extends Thread {
                     e.printStackTrace();
                 }
                 dos.writeUTF("TRUE");
+            } else if ("LIST".equals(command)) {
+                String dirPath = "server_storage";
+
+                // Check folder if it existing
+                if (!isDirExist(dirPath)) {
+                    return;
+                }
+
+                File dir = new File(dirPath);
+                String[] names = (dir.isDirectory() && dir.exists()) ? dir.list() : new String[0];
+
+                if (names == null) {
+                    names = new String[0];
+                }
+
+                // send cound then names 
+                dos.writeInt(names.length);
+                for (String name : names) {
+                    dos.writeUTF(name);
+                }
+                dos.flush();
             }
 
         } catch (Exception e) {
@@ -59,11 +82,12 @@ public class ClientHandler extends Thread {
     /*
      * This method use to create server_storage directory
      */
-    private void isDirExist(String path) {
+    private boolean isDirExist(String path) {
         File dir = new File(path);
 
-        if (!dir.exists()) {
-            dir.mkdirs();
+        if (dir.exists()) {
+            return dir.isDirectory();
         }
+        return dir.mkdirs();
     }
 }
