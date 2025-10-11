@@ -3,11 +3,13 @@ package clienthandler;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.Socket;
 
 public class ClientHandler extends Thread {
     private Socket clientSocket;
+    private String dirPath = "server_storage";
 
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -18,11 +20,56 @@ public class ClientHandler extends Thread {
         try (DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
                 DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream())) {
             // client send commands string and server need to read it for trigger
-            String command = dis.readUTF();
-            if ("UPLOAD".equals(command)) { // command will be assign from the first read from client
+            String command = dis.readUTF(); // command will be assign from the first read from client
+
+            if ("UPLOAD".equals(command)) {
                 uploadTrigger(dis, dos);
-            } else if ("LIST".equals(command)) {
+            }
+
+            if ("LIST".equals(command)) {
                 listTrigger(dis, dos);
+            }
+
+            if ("STREAMING".equals(command)) {
+                streamingTrigger(dis, dos);
+            }
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * When client send download function it will trigger this function
+     */
+    private void streamingTrigger(DataInputStream dis, DataOutputStream dos) {
+        try {
+            String fileName = dis.readUTF();
+            File file = new File(dirPath, fileName);
+
+            if (!file.exists() || !file.isFile()) {
+                dos.writeLong(-1L); // signal: not found
+                dos.flush();
+                return;
+            }
+
+            long fileSize = file.length();
+
+            // Send file size first
+            dos.writeLong(fileSize);
+            dos.flush();
+
+            try (FileInputStream fis = new FileInputStream(file)) {
+                byte[] buffer = new byte[4096];
+                int read;
+                while ((read = fis.read(buffer)) != -1) {
+                    dos.write(buffer, 0, read); // optional: dos.flush(); not necessary every chunk; flush at the end
+                }
+                dos.flush();
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
             }
 
         } catch (Exception e) {
@@ -36,7 +83,7 @@ public class ClientHandler extends Thread {
      */
     private void listTrigger(DataInputStream dis, DataOutputStream dos) {
         try {
-            String dirPath = "server_storage";
+            // String dirPath = "server_storage";
 
             // Check folder if it existing
             if (!isDirExist(dirPath)) {
@@ -82,7 +129,7 @@ public class ClientHandler extends Thread {
             String fileName = dis.readUTF(); // Because the second read is the fileName so call this again for file
             // name
             long fileSize = dis.readLong(); // read file size
-            String dirPath = "server_storage";
+            // String dirPath = "server_storage";
 
             // Check folder if it existing
             if (!isDirExist(dirPath)) {
