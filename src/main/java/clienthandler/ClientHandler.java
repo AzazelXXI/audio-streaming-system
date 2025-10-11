@@ -20,57 +20,9 @@ public class ClientHandler extends Thread {
             // client send commands string and server need to read it for trigger
             String command = dis.readUTF();
             if ("UPLOAD".equals(command)) { // command will be assign from the first read from client
-                String fileName = dis.readUTF(); // Because the second read is the fileName so call this again for file
-                                                 // name
-                long fileSize = dis.readLong(); // read file size
-                String dirPath = "server_storage";
-
-                // Check folder if it existing
-                if (!isDirExist(dirPath)) {
-                    return;
-                }
-
-                try (FileOutputStream fos = new FileOutputStream(dirPath + "/" + fileName)) {
-
-                    byte[] buffer = new byte[4096];
-                    long remaining = fileSize;
-
-                    while (remaining > 0) {
-                        int toRead = (int) Math.min(buffer.length, remaining);
-                        int read = dis.read(buffer, 0, toRead);
-
-                        if (read == -1) { // read until EOF
-                            break;
-                        }
-                        fos.write(buffer, 0, read);
-                        remaining -= read;
-                    }
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    e.printStackTrace();
-                }
-                dos.writeUTF("TRUE");
+                uploadTrigger(dis, dos);
             } else if ("LIST".equals(command)) {
-                String dirPath = "server_storage";
-
-                // Check folder if it existing
-                if (!isDirExist(dirPath)) {
-                    return;
-                }
-
-                File dir = new File(dirPath);
-                String[] names = (dir.isDirectory() && dir.exists()) ? dir.list() : new String[0];
-
-                if (names == null) {
-                    names = new String[0];
-                }
-
-                // send cound then names 
-                dos.writeInt(names.length);
-                for (String name : names) {
-                    dos.writeUTF(name);
-                }
-                dos.flush();
+                listTrigger(dis, dos);
             }
 
         } catch (Exception e) {
@@ -79,7 +31,38 @@ public class ClientHandler extends Thread {
         }
     }
 
-    /*
+    /**
+     * This method use to call the list song
+     */
+    private void listTrigger(DataInputStream dis, DataOutputStream dos) {
+        try {
+            String dirPath = "server_storage";
+
+            // Check folder if it existing
+            if (!isDirExist(dirPath)) {
+                return;
+            }
+
+            File dir = new File(dirPath);
+            String[] names = (dir.isDirectory() && dir.exists()) ? dir.list() : new String[0];
+
+            if (names == null) {
+                names = new String[0];
+            }
+
+            // send cound then names
+            dos.writeInt(names.length);
+            for (String name : names) {
+                dos.writeUTF(name);
+            }
+            dos.flush();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * This method use to create server_storage directory
      */
     private boolean isDirExist(String path) {
@@ -89,5 +72,46 @@ public class ClientHandler extends Thread {
             return dir.isDirectory();
         }
         return dir.mkdirs();
+    }
+
+    /**
+     * When client call upload it will trigger this method
+     */
+    private void uploadTrigger(DataInputStream dis, DataOutputStream dos) {
+        try {
+            String fileName = dis.readUTF(); // Because the second read is the fileName so call this again for file
+            // name
+            long fileSize = dis.readLong(); // read file size
+            String dirPath = "server_storage";
+
+            // Check folder if it existing
+            if (!isDirExist(dirPath)) {
+                return;
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(dirPath + "/" + fileName)) {
+
+                byte[] buffer = new byte[4096];
+                long remaining = fileSize;
+
+                while (remaining > 0) {
+                    int toRead = (int) Math.min(buffer.length, remaining);
+                    int read = dis.read(buffer, 0, toRead);
+
+                    if (read == -1) { // read until EOF
+                        break;
+                    }
+                    fos.write(buffer, 0, read);
+                    remaining -= read;
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+            dos.writeUTF("TRUE");
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 }

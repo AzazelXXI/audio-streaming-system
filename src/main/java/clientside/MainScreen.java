@@ -44,218 +44,169 @@ public class MainScreen extends javax.swing.JFrame {
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
-	// Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		jPanel1 = new javax.swing.JPanel();
-		pbarAudioProgress = new javax.swing.JProgressBar();
-		lblStartTimer = new javax.swing.JLabel();
-		lblEndTimer = new javax.swing.JLabel();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		listSongs = new javax.swing.JList<>();
-		btnStart = new javax.swing.JButton();
-		btnStop = new javax.swing.JButton();
-		btnNext = new javax.swing.JButton();
-		btnPrevious = new javax.swing.JButton();
-		btnUpload = new javax.swing.JButton();
-		btnPause = new javax.swing.JButton();
-		btnSkipForward = new javax.swing.JButton();
-		btnSkipBackward = new javax.swing.JButton();
-		lblSongName = new javax.swing.JLabel();
-		slidAudioVolume = new javax.swing.JSlider();
+        jPanel1 = new javax.swing.JPanel();
+        pbarAudioProgress = new javax.swing.JProgressBar();
+        lblStartTimer = new javax.swing.JLabel();
+        lblEndTimer = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listSongs = new javax.swing.JList<>();
+        btnStart = new javax.swing.JButton();
+        btnStop = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        btnPrevious = new javax.swing.JButton();
+        btnUpload = new javax.swing.JButton();
+        btnPause = new javax.swing.JButton();
+        btnSkipForward = new javax.swing.JButton();
+        btnSkipBackward = new javax.swing.JButton();
+        lblSongName = new javax.swing.JLabel();
+        slidAudioVolume = new javax.swing.JSlider();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		lblStartTimer.setText("00:00");
+        lblStartTimer.setText("00:00");
 
-		lblEndTimer.setText("00:00");
+        lblEndTimer.setText("00:00");
 
-		listSongs.setModel(new javax.swing.AbstractListModel<String>() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        listSongs.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(listSongs);
 
-			public int getSize() {
-				return strings.length;
-			}
+        btnStart.setText("Start");
+        btnStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartActionPerformed(evt);
+            }
+        });
 
-			public String getElementAt(int i) {
-				return strings[i];
-			}
-		});
-		jScrollPane1.setViewportView(listSongs);
+        btnStop.setText("Stop");
 
-		btnStart.setText("Start");
+        btnNext.setText("Next");
 
-		btnStop.setText("Stop");
+        btnPrevious.setText("Previous");
 
-		btnNext.setText("Next");
+        btnUpload.setText("Upload");
+        btnUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadActionPerformed(evt);
+            }
+        });
 
-		btnPrevious.setText("Previous");
+        btnPause.setText("||");
 
-		btnUpload.setText("Upload");
-		btnUpload.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btnUploadActionPerformed(evt);
-			}
-		});
+        btnSkipForward.setText(">>");
 
-		btnPause.setText("||");
+        btnSkipBackward.setText("<<");
 
-		btnSkipForward.setText(">>");
+        lblSongName.setText("jLabel1");
 
-		btnSkipBackward.setText("<<");
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblStartTimer)
+                                .addGap(108, 108, 108)
+                                .addComponent(btnSkipBackward)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnPause)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSkipForward)
+                                .addGap(18, 18, 18)
+                                .addComponent(slidAudioVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblEndTimer))
+                            .addComponent(pbarAudioProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(55, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnStart)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnStop)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnNext)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPrevious)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnUpload))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(317, 317, 317)
+                .addComponent(lblSongName)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblSongName)
+                .addGap(9, 9, 9)
+                .addComponent(pbarAudioProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblStartTimer)
+                            .addComponent(lblEndTimer))
+                        .addGap(28, 28, 28))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnPause)
+                            .addComponent(btnSkipForward)
+                            .addComponent(btnSkipBackward)
+                            .addComponent(slidAudioVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnStart)
+                            .addComponent(btnStop)
+                            .addComponent(btnNext)
+                            .addComponent(btnPrevious))
+                        .addContainerGap(27, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnUpload)
+                        .addContainerGap())))
+        );
 
-		lblSongName.setText("jLabel1");
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-		javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-		jPanel1.setLayout(jPanel1Layout);
-		jPanel1Layout.setHorizontalGroup(
-				jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(jPanel1Layout.createSequentialGroup()
-								.addGap(55, 55, 55)
-								.addGroup(jPanel1Layout.createParallelGroup(
-										javax.swing.GroupLayout.Alignment.LEADING)
-										.addGroup(jPanel1Layout
-												.createSequentialGroup()
-												.addGroup(jPanel1Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.LEADING,
-																false)
-														.addComponent(jScrollPane1)
-														.addGroup(jPanel1Layout
-																.createSequentialGroup()
-																.addComponent(lblStartTimer)
-																.addGap(108, 108,
-																		108)
-																.addComponent(btnSkipBackward)
-																.addGap(18, 18, 18)
-																.addComponent(btnPause)
-																.addGap(18, 18, 18)
-																.addComponent(btnSkipForward)
-																.addGap(18, 18, 18)
-																.addComponent(slidAudioVolume,
-																		javax.swing.GroupLayout.PREFERRED_SIZE,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		javax.swing.GroupLayout.PREFERRED_SIZE)
-																.addPreferredGap(
-																		javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		Short.MAX_VALUE)
-																.addComponent(lblEndTimer))
-														.addComponent(pbarAudioProgress,
-																javax.swing.GroupLayout.DEFAULT_SIZE,
-																javax.swing.GroupLayout.DEFAULT_SIZE,
-																Short.MAX_VALUE))
-												.addContainerGap(55,
-														Short.MAX_VALUE))
-										.addGroup(jPanel1Layout
-												.createSequentialGroup()
-												.addComponent(btnStart)
-												.addGap(18, 18, 18)
-												.addComponent(btnStop)
-												.addGap(18, 18, 18)
-												.addComponent(btnNext)
-												.addGap(18, 18, 18)
-												.addComponent(btnPrevious)
-												.addPreferredGap(
-														javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														Short.MAX_VALUE)
-												.addComponent(btnUpload))))
-						.addGroup(jPanel1Layout.createSequentialGroup()
-								.addGap(317, 317, 317)
-								.addComponent(lblSongName)
-								.addGap(0, 0, Short.MAX_VALUE)));
-		jPanel1Layout.setVerticalGroup(
-				jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(jPanel1Layout.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(lblSongName)
-								.addGap(9, 9, 9)
-								.addComponent(pbarAudioProgress,
-										javax.swing.GroupLayout.PREFERRED_SIZE,
-										27,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addGap(18, 18, 18)
-								.addGroup(jPanel1Layout.createParallelGroup(
-										javax.swing.GroupLayout.Alignment.LEADING)
-										.addGroup(jPanel1Layout
-												.createSequentialGroup()
-												.addGroup(jPanel1Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.BASELINE)
-														.addComponent(lblStartTimer)
-														.addComponent(lblEndTimer))
-												.addGap(28, 28, 28))
-										.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-												jPanel1Layout
-														.createSequentialGroup()
-														.addGroup(jPanel1Layout
-																.createParallelGroup(
-																		javax.swing.GroupLayout.Alignment.BASELINE)
-																.addComponent(btnPause)
-																.addComponent(btnSkipForward)
-																.addComponent(btnSkipBackward)
-																.addComponent(slidAudioVolume,
-																		javax.swing.GroupLayout.PREFERRED_SIZE,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		javax.swing.GroupLayout.PREFERRED_SIZE))
-														.addPreferredGap(
-																javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-								.addComponent(jScrollPane1,
-										javax.swing.GroupLayout.PREFERRED_SIZE,
-										218,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addGroup(jPanel1Layout.createParallelGroup(
-										javax.swing.GroupLayout.Alignment.LEADING)
-										.addGroup(jPanel1Layout
-												.createSequentialGroup()
-												.addGap(18, 18, 18)
-												.addGroup(jPanel1Layout
-														.createParallelGroup(
-																javax.swing.GroupLayout.Alignment.BASELINE)
-														.addComponent(btnStart)
-														.addComponent(btnStop)
-														.addComponent(btnNext)
-														.addComponent(btnPrevious))
-												.addContainerGap(27,
-														Short.MAX_VALUE))
-										.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-												jPanel1Layout
-														.createSequentialGroup()
-														.addPreferredGap(
-																javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-																javax.swing.GroupLayout.DEFAULT_SIZE,
-																Short.MAX_VALUE)
-														.addComponent(btnUpload)
-														.addContainerGap()))));
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(layout.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(jPanel1,
-										javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)));
-		layout.setVerticalGroup(
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(jPanel1,
-										javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-								.addContainerGap()));
+    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
+        // TODO add your handling code here:
 
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
+    }//GEN-LAST:event_btnStartActionPerformed
 
-	/*
+	/**
 	 * This will request LIST comman to the server and return it to the client
 	 */
 	private void loadSongs() {
@@ -284,7 +235,7 @@ public class MainScreen extends javax.swing.JFrame {
 		}
 	}
 
-	/*
+	/**
 	 * I created this function to empty the default JList values because netbean
 	 * keep remove my code
 	 */
@@ -293,7 +244,9 @@ public class MainScreen extends javax.swing.JFrame {
 		listSongs.setModel(songListModel);
 	}
 
-	// Upload file
+	/**
+	 * Upload file
+	 */
 	private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnUploadActionPerformed
 		// TODO add your handling code here:
 		try {
@@ -366,22 +319,22 @@ public class MainScreen extends javax.swing.JFrame {
 		java.awt.EventQueue.invokeLater(() -> new MainScreen().setVisible(true));
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JButton btnNext;
-	private javax.swing.JButton btnPause;
-	private javax.swing.JButton btnPrevious;
-	private javax.swing.JButton btnSkipBackward;
-	private javax.swing.JButton btnSkipForward;
-	private javax.swing.JButton btnStart;
-	private javax.swing.JButton btnStop;
-	private javax.swing.JButton btnUpload;
-	private javax.swing.JPanel jPanel1;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JLabel lblEndTimer;
-	private javax.swing.JLabel lblSongName;
-	private javax.swing.JLabel lblStartTimer;
-	private javax.swing.JList<String> listSongs;
-	private javax.swing.JProgressBar pbarAudioProgress;
-	private javax.swing.JSlider slidAudioVolume;
-	// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPause;
+    private javax.swing.JButton btnPrevious;
+    private javax.swing.JButton btnSkipBackward;
+    private javax.swing.JButton btnSkipForward;
+    private javax.swing.JButton btnStart;
+    private javax.swing.JButton btnStop;
+    private javax.swing.JButton btnUpload;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblEndTimer;
+    private javax.swing.JLabel lblSongName;
+    private javax.swing.JLabel lblStartTimer;
+    private javax.swing.JList<String> listSongs;
+    private javax.swing.JProgressBar pbarAudioProgress;
+    private javax.swing.JSlider slidAudioVolume;
+    // End of variables declaration//GEN-END:variables
 }
