@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 
 import javazoom.jl.player.Player;
@@ -38,6 +39,7 @@ public class MainScreen extends javax.swing.JFrame {
         emptyDefaultListSong();
         loadSongs();
         btnStop.addActionListener(e -> stopStreaming());
+        btnNext.addActionListener(e -> nextSong());
     }
 
     /**
@@ -235,6 +237,36 @@ public class MainScreen extends javax.swing.JFrame {
     private Thread playerThread;
     private Player mp3Player;
 
+    /**
+     * Next song function for btnNext
+     */
+    private void nextSong() {
+        ListModel<String> model = listSongs.getModel();
+
+        int size = model.getSize();
+        if (size == 0) {
+            JOptionPane.showMessageDialog(this, "No songs available");
+            return;
+        }
+
+        int current = listSongs.getSelectedIndex();
+        int nextIndex;
+
+        // if at the end of list song and click next button will 
+        if (current < 0 || current >= size - 1) {
+            nextIndex = 0;
+        } else {
+            nextIndex = current + 1;
+        }
+
+        // set selected and visible
+        listSongs.setSelectedIndex(nextIndex);
+        listSongs.ensureIndexIsVisible(nextIndex);
+        
+        String nextSong = model.getElementAt(nextIndex);
+        
+        streamingAndPlay(nextSong);
+    }
     /**
      * This function use for streaming after play button click
      */
