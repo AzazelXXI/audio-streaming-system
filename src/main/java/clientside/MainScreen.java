@@ -113,7 +113,7 @@ public class MainScreen extends javax.swing.JFrame {
 
         btnSkipBackward.setText("<<");
 
-        lblSongName.setText("jLabel1");
+        lblSongName.setText("");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -254,12 +254,16 @@ public class MainScreen extends javax.swing.JFrame {
 
                 long fileSize = dis.readLong();
 
+                // If file size smaller than 0 then it's mean no file found
                 if (fileSize < 0) {
+                    lblSongName.setText("Not found " + fileName);
                     SwingUtilities
                             .invokeLater(() -> JOptionPane.showInputDialog(this, "File not found on this server"));
                     closeQuietly(dis, dos, streamingSocket);
                     return;
                 }
+
+                SwingUtilities.invokeLater(() -> lblSongName.setText("Playing: " + fileName));
 
                 // Use BufferedInputStreaming wrapping the socket input stream for JLayer
                 BufferedInputStream bis = new BufferedInputStream(streamingSocket.getInputStream());
