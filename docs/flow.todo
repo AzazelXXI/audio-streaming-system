@@ -14,11 +14,11 @@ Workflow of audio streaming system:
     ✔ User can click on the list and play @started(25-10-11 17:32) @done(25-10-11 20:51) @lasted(3h19m)
     ✔ When user click stop will cancel the song even not like pause @started(25-10-11 21:28) @done(25-10-12 20:15) @lasted(22h47m38s)
     ✔ When user click Next will move to next song in the song list (if there is no song make a pop up for it) @started(25-10-11 21:28) @done(25-10-12 20:15) @lasted(22h47m41s)
-    ☐ When user click Previous will move to the previous song in the list (if there is no song make a pop up for it) @started(25-10-11 21:28)
+    ✔ When user click Previous will move to the previous song in the list (if there is no song make a pop up for it) @started(25-10-11 21:28) @done(25-10-12 20:46) @lasted(23h18m43s)
     ☐ When user click Pause will pause the current song @started(25-10-11 21:28)
     ☐ When the song is streaming make sure the StartTimer and EndTimer, ProgressBar Song are fits to the song @started(25-10-11 21:28)
     ✔ When a song is streaming the label of above progress bar song is showing the name of current song streaming @started(25-10-12 17:25) @done(25-10-12 17:26) @lasted(1m8s)
-    ☐ Adjust Volume for the song
+    ✔ Adjust Volume for the song @done(25-10-12 21:43)
 3. Extra:
     Login Screen:
         ☐ Username and Password

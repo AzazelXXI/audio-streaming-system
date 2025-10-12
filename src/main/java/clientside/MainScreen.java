@@ -6,17 +6,27 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import javazoom.jl.decoder.Bitstream;
+import javazoom.jl.decoder.Decoder;
+import javazoom.jl.decoder.Header;
+import javazoom.jl.decoder.SampleBuffer;
 import javazoom.jl.player.Player;
 
 /**
@@ -40,6 +50,15 @@ public class MainScreen extends javax.swing.JFrame {
         loadSongs();
         btnStop.addActionListener(e -> stopStreaming());
         btnNext.addActionListener(e -> nextSong());
+        btnPrevious.addActionListener(e -> previousSong());
+
+        slidAudioVolume.setMinimum(0);
+        slidAudioVolume.setMaximum(100);
+        slidAudioVolume.setValue(80);
+
+        // add a single ChangeListener that applies the slider to the discovered gain
+        // control
+        slidAudioVolume.addChangeListener(e -> setVolumeFromSlider(slidAudioVolume.getValue()));
     }
 
     /**
@@ -237,6 +256,38 @@ public class MainScreen extends javax.swing.JFrame {
     private Thread playerThread;
     private Player mp3Player;
 
+    // field: current gain control if we find it via reflection
+    private volatile FloatControl currentGainControl = null;
+
+    /**
+     * Previous song for btnPrevious
+     */
+    private void previousSong() {
+        ListModel<String> model = listSongs.getModel();
+
+        int size = model.getSize();
+        if (size == 0) {
+            JOptionPane.showMessageDialog(this, "There are no songs available");
+            return;
+        }
+
+        int current = listSongs.getSelectedIndex();
+        int previousIndex;
+
+        if (current <= 0) {
+            previousIndex = size - 1;
+        } else {
+            previousIndex = current - 1;
+        }
+
+        // set selected song and make it visible
+        listSongs.setSelectedIndex(previousIndex);
+        listSongs.ensureIndexIsVisible(previousIndex);
+
+        String previousSong = model.getElementAt(previousIndex);
+        streamingAndPlay(previousSong);
+    }
+
     /**
      * Next song function for btnNext
      */
@@ -252,7 +303,7 @@ public class MainScreen extends javax.swing.JFrame {
         int current = listSongs.getSelectedIndex();
         int nextIndex;
 
-        // if at the end of list song and click next button will 
+        // if at the end of list song and click next button will
         if (current < 0 || current >= size - 1) {
             nextIndex = 0;
         } else {
@@ -262,11 +313,12 @@ public class MainScreen extends javax.swing.JFrame {
         // set selected and visible
         listSongs.setSelectedIndex(nextIndex);
         listSongs.ensureIndexIsVisible(nextIndex);
-        
+
         String nextSong = model.getElementAt(nextIndex);
-        
+
         streamingAndPlay(nextSong);
     }
+
     /**
      * This function use for streaming after play button click
      */
@@ -299,8 +351,89 @@ public class MainScreen extends javax.swing.JFrame {
 
                 // Use BufferedInputStreaming wrapping the socket input stream for JLayer
                 BufferedInputStream bis = new BufferedInputStream(streamingSocket.getInputStream());
+                // after creating mp3Player
                 mp3Player = new Player(bis);
 
+                // Start a short background task to try to discover the player's
+                // SourceDataLine/FloatControl.
+                // Player may create its audio device/line lazily, so we try a few times with
+                // small sleeps.
+                new Thread(() -> {
+                    FloatControl found = null;
+                    for (int attempt = 0; attempt < 20; attempt++) { // ~2 seconds total (20 * 100ms)
+                        try {
+                            // reflection: Player has a private 'audio' field which holds the AudioDevice
+                            Field audioField = Player.class.getDeclaredField("audio");
+                            audioField.setAccessible(true);
+                            Object audioDev = audioField.get(mp3Player);
+                            if (audioDev != null) {
+                                // try to find a SourceDataLine field
+                                for (Field f : audioDev.getClass().getDeclaredFields()) {
+                                    if (SourceDataLine.class.isAssignableFrom(f.getType())) {
+                                        f.setAccessible(true);
+                                        Object maybeLine = f.get(audioDev);
+                                        if (maybeLine instanceof SourceDataLine) {
+                                            SourceDataLine line = (SourceDataLine) maybeLine;
+                                            if (line != null
+                                                    && line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                                                found = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                // fallback by field-name (some JLayer builds use 'line' or 'source')
+                                if (found == null) {
+                                    try {
+                                        Field f = audioDev.getClass().getDeclaredField("line");
+                                        f.setAccessible(true);
+                                        Object maybeLine = f.get(audioDev);
+                                        if (maybeLine instanceof SourceDataLine) {
+                                            SourceDataLine line = (SourceDataLine) maybeLine;
+                                            if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                                                found = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+                                            }
+                                        }
+                                    } catch (NoSuchFieldException ignored) {
+                                    }
+                                    try {
+                                        Field f = audioDev.getClass().getDeclaredField("source");
+                                        f.setAccessible(true);
+                                        Object maybeLine = f.get(audioDev);
+                                        if (maybeLine instanceof SourceDataLine) {
+                                            SourceDataLine line = (SourceDataLine) maybeLine;
+                                            if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                                                found = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+                                            }
+                                        }
+                                    } catch (NoSuchFieldException ignored) {
+                                    }
+                                }
+                            }
+                        } catch (Throwable ignored) {
+                            // ignore reflection exceptions and retry
+                        }
+
+                        if (found != null) {
+                            // set the shared field and apply current slider value on EDT
+                            currentGainControl = found;
+                            SwingUtilities.invokeLater(() -> setVolumeFromSlider(slidAudioVolume.getValue()));
+                            break;
+                        }
+
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ie) {
+                            break;
+                        }
+
+                        // stop searching early if player thread dies
+                        if (playerThread == null || !playerThread.isAlive())
+                            break;
+                    }
+                }, "GainFinder-Thread").start();
+
+                // now play (this blocks until finish)
                 mp3Player.play();
                 closeQuietly(dis, dos, streamingSocket);
             } catch (Exception e) {
@@ -505,4 +638,19 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JProgressBar pbarAudioProgress;
     private javax.swing.JSlider slidAudioVolume;
     // End of variables declaration//GEN-END:variables
+
+    private void setVolumeFromSlider(int sliderValue) {
+        FloatControl gain = currentGainControl; // local snapshot
+        if (gain != null) {
+            float min = gain.getMinimum();
+            float max = gain.getMaximum();
+            float gainDb = (max - min) * (sliderValue / 100f) + min;
+            try {
+                gain.setValue(gainDb);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+        // if currentGainControl is null, nothing to do yet; when discovered we apply
+        // slider value
+    }
 }
