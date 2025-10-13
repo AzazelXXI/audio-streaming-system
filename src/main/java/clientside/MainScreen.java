@@ -6,27 +6,20 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.SourceDataLine;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import javax.swing.Timer;
 import javazoom.jl.decoder.Bitstream;
-import javazoom.jl.decoder.Decoder;
 import javazoom.jl.decoder.Header;
-import javazoom.jl.decoder.SampleBuffer;
 import javazoom.jl.player.Player;
 
 /**
@@ -69,7 +62,7 @@ public class MainScreen extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -83,9 +76,6 @@ public class MainScreen extends javax.swing.JFrame {
         btnNext = new javax.swing.JButton();
         btnPrevious = new javax.swing.JButton();
         btnUpload = new javax.swing.JButton();
-        btnPause = new javax.swing.JButton();
-        btnSkipForward = new javax.swing.JButton();
-        btnSkipBackward = new javax.swing.JButton();
         lblSongName = new javax.swing.JLabel();
         slidAudioVolume = new javax.swing.JSlider();
 
@@ -97,14 +87,8 @@ public class MainScreen extends javax.swing.JFrame {
 
         listSongs.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-
-            public int getSize() {
-                return strings.length;
-            }
-
-            public String getElementAt(int i) {
-                return strings[i];
-            }
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane1.setViewportView(listSongs);
 
@@ -128,126 +112,90 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
-        btnPause.setText("||");
-
-        btnSkipForward.setText(">>");
-
-        btnSkipBackward.setText("<<");
-
-        lblSongName.setText("");
+        lblSongName.setText("jLabel1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(55, 55, 55)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
-                                                                false)
-                                                        .addComponent(jScrollPane1)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(lblStartTimer)
-                                                                .addGap(108, 108, 108)
-                                                                .addComponent(btnSkipBackward)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(btnPause)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(btnSkipForward)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(slidAudioVolume,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                        Short.MAX_VALUE)
-                                                                .addComponent(lblEndTimer))
-                                                        .addComponent(pbarAudioProgress,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addContainerGap(55, Short.MAX_VALUE))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(btnStart)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnStop)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnNext)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnPrevious)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnUpload))))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(317, 317, 317)
-                                .addComponent(lblSongName)
-                                .addGap(0, 0, Short.MAX_VALUE)));
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblStartTimer)
+                                .addGap(378, 378, 378)
+                                .addComponent(slidAudioVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblEndTimer))
+                            .addComponent(pbarAudioProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(55, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnStart)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnStop)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnNext)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPrevious)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnUpload))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(317, 317, 317)
+                .addComponent(lblSongName)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(lblSongName)
-                                .addGap(9, 9, 9)
-                                .addComponent(pbarAudioProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 27,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(lblStartTimer)
-                                                        .addComponent(lblEndTimer))
-                                                .addGap(28, 28, 28))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
-                                                .createSequentialGroup()
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(btnPause)
-                                                        .addComponent(btnSkipForward)
-                                                        .addComponent(btnSkipBackward)
-                                                        .addComponent(slidAudioVolume,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 218,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(18, 18, 18)
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(btnStart)
-                                                        .addComponent(btnStop)
-                                                        .addComponent(btnNext)
-                                                        .addComponent(btnPrevious))
-                                                .addContainerGap(27, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
-                                                .createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnUpload)
-                                                .addContainerGap()))));
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblSongName)
+                .addGap(9, 9, 9)
+                .addComponent(pbarAudioProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblStartTimer)
+                            .addComponent(lblEndTimer))
+                        .addGap(28, 28, 28))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(slidAudioVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnStart)
+                            .addComponent(btnStop)
+                            .addComponent(btnNext)
+                            .addComponent(btnPrevious))
+                        .addContainerGap(27, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnUpload)
+                        .addContainerGap())))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -258,6 +206,67 @@ public class MainScreen extends javax.swing.JFrame {
 
     // field: current gain control if we find it via reflection
     private volatile FloatControl currentGainControl = null;
+
+    // Playback timing
+    private Timer progressTimer;
+    private long playbackStartMs = 0L;
+    private long elapsedBeforePaused = 0L;
+    private long estimateDurationsMs = -1L;
+
+    /**
+     * Format time is mm:ss
+     */
+    private static String formatTime(long ms) {
+        if (ms < 0)
+            return "--:--";
+        long totalSeconds = ms / 1000;
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    /**
+     * Start/Stop timer in swing timer
+     */
+    private void startProgressTimer() {
+        if (progressTimer != null && progressTimer.isRunning()) {
+            progressTimer.stop();
+        }
+
+        progressTimer = new Timer(500, e -> {
+            long elapsed = 0;
+            if (playbackStartMs > 0) {
+                elapsed = System.currentTimeMillis() - playbackStartMs + elapsedBeforePaused;
+            }
+            lblStartTimer.setText(formatTime(elapsed));
+
+            if (estimateDurationsMs > 0) {
+                int percent = (int) ((elapsed * 100L) / Math.max(1L, estimateDurationsMs));
+                percent = Math.min(Math.max(percent, 0), 100);
+                pbarAudioProgress.setIndeterminate(false);
+                pbarAudioProgress.setValue(percent);
+            } else {
+                pbarAudioProgress.setIndeterminate(true);
+            }
+        });
+
+        playbackStartMs = System.currentTimeMillis();
+        progressTimer.setInitialDelay(0);
+        progressTimer.start();
+    }
+
+    private void stopProgressTimer() {
+        if (progressTimer != null) {
+            progressTimer.stop();
+            progressTimer = null;
+        }
+        lblStartTimer.setText("00:00");
+        pbarAudioProgress.setValue(0);
+        pbarAudioProgress.setIndeterminate(false);
+        playbackStartMs = 0L;
+        elapsedBeforePaused = 0L;
+        estimateDurationsMs = -1L;
+    }
 
     /**
      * Previous song for btnPrevious
@@ -347,63 +356,124 @@ public class MainScreen extends javax.swing.JFrame {
                     return;
                 }
 
-                SwingUtilities.invokeLater(() -> lblSongName.setText("Playing: " + fileName));
-
-                // Use BufferedInputStreaming wrapping the socket input stream for JLayer
+                // wrap socket stream and allow reset after reading header
                 BufferedInputStream bis = new BufferedInputStream(streamingSocket.getInputStream());
-                // after creating mp3Player
-                mp3Player = new Player(bis);
+                bis.mark(64 * 1024); // reserve mark (64KB should be enough for header/framing)
 
-                // Start a short background task to try to discover the player's
-                // SourceDataLine/FloatControl.
-                // Player may create its audio device/line lazily, so we try a few times with
-                // small sleeps.
-                new Thread(() -> {
-                    FloatControl found = null;
-                    for (int attempt = 0; attempt < 20; attempt++) { // ~2 seconds total (20 * 100ms)
+                // try to read first MP3 header(s) to estimate bitrate.
+                // We normalize to bits-per-second (bps) because different jlayer versions
+                // may return bitrate in kbps or bps.
+                long bitrateBps = -1L;
+                try {
+                    Bitstream headerBs = new Bitstream(bis);
+                    // Try a few frames because the first may be an ID3v2 tag or invalid
+                    for (int i = 0; i < 6 && bitrateBps <= 0; i++) {
+                        Header header = headerBs.readFrame();
+                        if (header == null)
+                            break;
+                        int raw = -1;
                         try {
-                            // reflection: Player has a private 'audio' field which holds the AudioDevice
-                            Field audioField = Player.class.getDeclaredField("audio");
+                            raw = header.bitrate(); // may be kbps (e.g. 128) or bps (e.g. 128000)
+                        } catch (Throwable ignored) {
+                        }
+                        headerBs.closeFrame();
+                        if (raw > 0) {
+                            if (raw > 1000) {
+                                // very likely already in bits-per-second
+                                bitrateBps = raw;
+                            } else {
+                                // likely kbps -> convert to bps
+                                bitrateBps = (long) raw * 1000L;
+                            }
+                            break;
+                        }
+                    }
+                } catch (Throwable t) {
+                    // unable to read header(s) — we'll fall back below
+                } finally {
+                    try {
+                        bis.reset();
+                    } catch (IOException ignored) {
+                    }
+                }
+
+                // Fallback to a safe default if detection failed (128 kbps)
+                if (bitrateBps <= 0) {
+                    bitrateBps = 128_000L;
+                    logger.fine("Could not detect MP3 bitrate; using fallback 128 kbps (128000 bps).");
+                } else {
+                    logger.fine("Detected bitrate (bps): " + bitrateBps);
+                }
+
+                // estimate duration in milliseconds:
+                // fileSize (bytes) -> bits = fileSize * 8
+                // seconds = bits / bitrateBps
+                // ms = seconds * 1000 => ms = bits * 1000 / bitrateBps
+                estimateDurationsMs = (fileSize * 8L * 1000L) / Math.max(1L, bitrateBps);
+
+                // update UI on EDT
+                SwingUtilities.invokeLater(() -> {
+                    lblEndTimer.setText(formatTime(estimateDurationsMs));
+                    pbarAudioProgress.setIndeterminate(false);
+                    pbarAudioProgress.setMaximum(100); // percent mode 0..100
+                    pbarAudioProgress.setValue(0);
+                });
+
+                // create player and start playback
+                BufferedInputStream playerBis = bis; // we already reset bis
+                mp3Player = new Player(playerBis);
+
+                new Thread(() -> {
+                    java.lang.reflect.Field audioField;
+                    FloatControl found = null;
+                    for (int attempt = 0; attempt < 20 && found == null; attempt++) { // try for ~2s
+                        try {
+                            audioField = Player.class.getDeclaredField("audio");
                             audioField.setAccessible(true);
                             Object audioDev = audioField.get(mp3Player);
                             if (audioDev != null) {
                                 // try to find a SourceDataLine field
-                                for (Field f : audioDev.getClass().getDeclaredFields()) {
-                                    if (SourceDataLine.class.isAssignableFrom(f.getType())) {
+                                for (java.lang.reflect.Field f : audioDev.getClass().getDeclaredFields()) {
+                                    if (javax.sound.sampled.SourceDataLine.class.isAssignableFrom(f.getType())) {
                                         f.setAccessible(true);
                                         Object maybeLine = f.get(audioDev);
-                                        if (maybeLine instanceof SourceDataLine) {
-                                            SourceDataLine line = (SourceDataLine) maybeLine;
-                                            if (line != null
-                                                    && line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                                                found = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+                                        if (maybeLine instanceof javax.sound.sampled.SourceDataLine) {
+                                            javax.sound.sampled.SourceDataLine line = (javax.sound.sampled.SourceDataLine) maybeLine;
+                                            if (line.isControlSupported(
+                                                    javax.sound.sampled.FloatControl.Type.MASTER_GAIN)) {
+                                                found = (FloatControl) line
+                                                        .getControl(javax.sound.sampled.FloatControl.Type.MASTER_GAIN);
                                                 break;
                                             }
                                         }
                                     }
                                 }
-                                // fallback by field-name (some JLayer builds use 'line' or 'source')
+                                // fallback named fields
                                 if (found == null) {
                                     try {
-                                        Field f = audioDev.getClass().getDeclaredField("line");
-                                        f.setAccessible(true);
-                                        Object maybeLine = f.get(audioDev);
-                                        if (maybeLine instanceof SourceDataLine) {
-                                            SourceDataLine line = (SourceDataLine) maybeLine;
-                                            if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                                                found = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+                                        java.lang.reflect.Field lf = audioDev.getClass().getDeclaredField("line");
+                                        lf.setAccessible(true);
+                                        Object maybeLine = lf.get(audioDev);
+                                        if (maybeLine instanceof javax.sound.sampled.SourceDataLine) {
+                                            javax.sound.sampled.SourceDataLine line = (javax.sound.sampled.SourceDataLine) maybeLine;
+                                            if (line.isControlSupported(
+                                                    javax.sound.sampled.FloatControl.Type.MASTER_GAIN)) {
+                                                found = (FloatControl) line
+                                                        .getControl(javax.sound.sampled.FloatControl.Type.MASTER_GAIN);
                                             }
                                         }
                                     } catch (NoSuchFieldException ignored) {
                                     }
                                     try {
-                                        Field f = audioDev.getClass().getDeclaredField("source");
-                                        f.setAccessible(true);
-                                        Object maybeLine = f.get(audioDev);
-                                        if (maybeLine instanceof SourceDataLine) {
-                                            SourceDataLine line = (SourceDataLine) maybeLine;
-                                            if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                                                found = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+                                        java.lang.reflect.Field lf = audioDev.getClass().getDeclaredField("source");
+                                        lf.setAccessible(true);
+                                        Object maybeLine = lf.get(audioDev);
+                                        if (maybeLine instanceof javax.sound.sampled.SourceDataLine) {
+                                            javax.sound.sampled.SourceDataLine line = (javax.sound.sampled.SourceDataLine) maybeLine;
+                                            if (line.isControlSupported(
+                                                    javax.sound.sampled.FloatControl.Type.MASTER_GAIN)) {
+                                                found = (FloatControl) line
+                                                        .getControl(javax.sound.sampled.FloatControl.Type.MASTER_GAIN);
                                             }
                                         }
                                     } catch (NoSuchFieldException ignored) {
@@ -411,31 +481,39 @@ public class MainScreen extends javax.swing.JFrame {
                                 }
                             }
                         } catch (Throwable ignored) {
-                            // ignore reflection exceptions and retry
+                            // reflection may fail on some builds; retry a few times
                         }
-
-                        if (found != null) {
-                            // set the shared field and apply current slider value on EDT
-                            currentGainControl = found;
-                            SwingUtilities.invokeLater(() -> setVolumeFromSlider(slidAudioVolume.getValue()));
+                        if (found != null)
                             break;
-                        }
-
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException ie) {
                             break;
                         }
-
-                        // stop searching early if player thread dies
                         if (playerThread == null || !playerThread.isAlive())
                             break;
                     }
+
+                    if (found != null) {
+                        currentGainControl = found;
+                        // apply current slider value on EDT
+                        SwingUtilities.invokeLater(() -> setVolumeFromSlider(slidAudioVolume.getValue()));
+                    }
                 }, "GainFinder-Thread").start();
 
-                // now play (this blocks until finish)
-                mp3Player.play();
-                closeQuietly(dis, dos, streamingSocket);
+                // start timers right before play
+                SwingUtilities.invokeLater(() -> {
+                    lblSongName.setText("Playing: " + fileName);
+                    startProgressTimer();
+                });
+
+                mp3Player.play(); // will block until playback finished (in playerThread)
+
+                // after play() returns and before stopProgressTimer()
+                if (estimateDurationsMs > 0) {
+                    SwingUtilities.invokeLater(() -> lblStartTimer.setText(formatTime(estimateDurationsMs)));
+                }
+                stopProgressTimer();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
@@ -452,19 +530,19 @@ public class MainScreen extends javax.swing.JFrame {
             if (dis != null)
                 dis.close();
         } catch (Exception e) {
-            // TODO: handle exception
+            // ignore
         }
         try {
             if (dos != null)
-                dis.close();
+                dos.close(); // <-- fixed: close dos, not dis again
         } catch (Exception e) {
-            // TODO: handle exception
+            // ignore
         }
         try {
             if (streamingSocket != null)
                 streamingSocket.close();
         } catch (Exception e) {
-            // TODO: handle exception
+            // ignore
         }
     }
 
@@ -622,10 +700,7 @@ public class MainScreen extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNext;
-    private javax.swing.JButton btnPause;
     private javax.swing.JButton btnPrevious;
-    private javax.swing.JButton btnSkipBackward;
-    private javax.swing.JButton btnSkipForward;
     private javax.swing.JButton btnStart;
     private javax.swing.JButton btnStop;
     private javax.swing.JButton btnUpload;

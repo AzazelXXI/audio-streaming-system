@@ -54,13 +54,7 @@
                               <Component id="jScrollPane1" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="lblStartTimer" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
-                                  <Component id="btnSkipBackward" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="btnPause" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="btnSkipForward" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="378" max="-2" attributes="0"/>
                                   <Component id="slidAudioVolume" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="lblEndTimer" min="-2" max="-2" attributes="0"/>
@@ -106,12 +100,7 @@
                           <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btnPause" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnSkipForward" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnSkipBackward" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="slidAudioVolume" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="slidAudioVolume" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -205,21 +194,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUploadActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnPause">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="||"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnSkipForward">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnSkipBackward">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="&lt;&lt;"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblSongName">
           <Properties>
