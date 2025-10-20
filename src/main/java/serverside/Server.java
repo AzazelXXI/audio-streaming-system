@@ -17,12 +17,7 @@ public class Server {
                 Socket mySocket = myServerSocket.accept(); // Installed the connection from the client
 
                 new ClientHandler(mySocket).start();
-                // } catch (Exception e) {
-                // // TODO: handle exception
-                // e.printStackTrace();
-                // }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
